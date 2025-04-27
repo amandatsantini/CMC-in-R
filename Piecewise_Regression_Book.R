@@ -6,7 +6,6 @@ list.files()
 # Carrega os pacotes necessários
 library(data.table)    # Manipulação de dados
 library(segmented)     # Regressão linear segmentada
-library(boot)          # Bootstrapping
 library(ggplot2)       # Visualização de resultados
 library(vegan)
 library(dplyr)
@@ -14,14 +13,14 @@ library(lme4)
 library(gridExtra)
 
 # Lê os dados
-dados <- fread("CMC_all.csv")
+dados <- fread("nomedoseuarquivo.csv")
 head(dados)  # Verifique as primeiras linhas para confirmar os nomes das colunas
 
 # Supondo que os dados possuam as colunas "x" (variável independente) e "y" (variável dependente)
 # Modelo linear
 modelo <- lm(y ~ x, data = dados) #trocar "y" pelo nome da sua coluna com os resultados da tensão superficial, e trocar "x" pelo nome da coluna com as concentrações testadas.
 
-# Regressão linear segmentada utilizando CONC como variável de segmentação
+# Regressão linear segmentada utilizando Concentração como variável de segmentação
 seg_modelo <- segmented(modelo, seg.Z = ~x, psi = list(x = median(dados$x))) #trocar "x" pelo nome da coluna com as concentrações testadas.
 
 summary(seg_modelo)
@@ -47,7 +46,7 @@ plot1 <- ggplot(dados, aes(x = Concentracao, y = Tensao_superficial)) + #Em "x =
            label = paste("CMC =", round(cmc_value, 2)),
            hjust = -0.1, vjust = -0.5, color = "red") +
   theme_minimal() +
-  labs(title = "Piecewise Regression com Breakpoint",
+  labs(title = "Concentração Micelar Crítica",
        x = "Concentração",
        y = "Tensão Superficial")
 pdf("grafico_piecewise.pdf", width = 8, height = 6)
